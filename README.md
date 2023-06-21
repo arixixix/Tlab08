@@ -6,6 +6,66 @@
 $ open https://docs.docker.com/get-started/
 ```
 
+## Homework
+
+### Установка Docker
+
+```sh
+sudo apt-get install docker
+```
+
+### Основные инструкции Dockerfile
+
+```sh
+FROM
+LABEL
+RUN
+COPY
+CMD
+WORKDIR
+ENV
+```
+
+### Основные команды для управления контейнерами
+
+```sh
+run
+stop
+rm
+logs
+```
+
+### Основные команды для управления образами
+
+```sh
+build
+push
+ls
+rmi
+```
+
+### Доп команды
+
+```sh
+docker login
+docker version
+docker system prune
+docker container ls -a -s
+```
+
+### Флаги
+
+```sh
+-t
+ps -a 
+-s
+```
+
+
+
+
+
+
 ## Tasks
 
 - [ ] 1. Создать публичный репозиторий с названием **lab08** на сервисе **GitHub**
