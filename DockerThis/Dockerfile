@@ -1,6 +1,6 @@
 FROM python
 
-LABEL maintainer="Sxeigumen"
+LABEL maintainer="arixixix"
 
 WORKDIR .
 
