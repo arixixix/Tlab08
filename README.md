@@ -8,6 +8,8 @@ $ open https://docs.docker.com/get-started/
 
 ## Homework
 
+Для начала, я ознакомилась с базовыми принципами работы Docker-файлов. Ниже я привела основные для наглядности.
+
 ### Установка Docker
 
 ```sh
@@ -61,161 +63,119 @@ ps -a
 -s
 ```
 
+Далее я сделала 2 докер-файла, чтобы научиться работать с Docker.
 
+Первый, это результат работы следующего python-файла:
 
+### DockerExp/DockerPic.py
+```sh
+print("            ***********         **********       ********     **  ***       ************     **********  ")
+print("           ***         **      **        **     **           **  ***       **               ***     **   ")
+print("          ***          **     **        **     **           ** ***        **********       ***     **    ")
+print("         ***          **     **       **      **           ****          **********      **********      ")
+print("        ***          **     **       **      **           *****         **              ******           ")
+print("       ***          **     **       **      **           **   ***      ***********     ***  ***          ")
+print("      *************       ***********      **********   **      ***   ************    ***     ***        ")
+```
 
-
-
-## Tasks
-
-- [ ] 1. Создать публичный репозиторий с названием **lab08** на сервисе **GitHub**
-- [ ] 2. Ознакомиться со ссылками учебного материала
-- [ ] 3. Выполнить инструкцию учебного материала
-- [ ] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
-
-## Tutorial
+### Dockerfile для этой программы 
 
 ```sh
-$ export GITHUB_USERNAME=<имя_пользователя>
-```
+FROM python
+
+WORKDIR /app_dir
+
+COPY . .
+
+RUN apt-get update
+
+CMD ["python", "DockerPic.py"]
 
 ```
-$ cd ${GITHUB_USERNAME}/workspace
-$ pushd .
-$ source scripts/activate
-```
+
+Следующие команды (создание docker image и его запуск) были выполнены для проверки работы:
 
 ```sh
-$ git clone https://github.com/${GITHUB_USERNAME}/lab07 lab08
-$ cd lab08
-$ git submodule update --init
-$ git remote remove origin
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab08
+% sudo docker build -t picture ./DockerExp
+% sudo docker run picture
 ```
+
+Далее аналогичные действия были проведены для следущего python-файла:
+
+### DockerThis/THIS.py
 
 ```sh
-$ cat > Dockerfile <<EOF
-FROM ubuntu:18.04
-EOF
+import this
 ```
+
+### Dockerfile
 
 ```sh
-$ cat >> Dockerfile <<EOF
+FROM python
 
-RUN apt update
-RUN apt install -yy gcc g++ cmake
-EOF
+LABEL maintainer="arixixix"
+
+WORKDIR .
+
+COPY . .
+
+CMD ["python", "THIS.py"]
 ```
+
+### Результат работы команд терминала приведенных выше:
 
 ```sh
-$ cat >> Dockerfile <<EOF
+The Zen of Python, by Tim Peters
 
-COPY . print/
-WORKDIR print
-EOF
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
 ```
+
+Также был сделан yml файл для GitHub Action, чтобы продемонстрировать работу двух докер файлов.
+
+### .github/workflows/main.yml
 
 ```sh
-$ cat >> Dockerfile <<EOF
-
-RUN cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install
-RUN cmake --build _build
-RUN cmake --build _build --target install
-EOF
+on:
+  push:
+    branches:
+        master
+          
+jobs:
+  Docker:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: PyFilePic
+          run: |
+            sudo docker build -t picture ./DockerExp
+            sudo docker run picture
+            
+        - name: PyFileThis
+          run: |
+            sudo docker build -t this ./DockerThis
+            sudo docker run this
+          
+          
 ```
 
-```sh
-$ cat >> Dockerfile <<EOF
-
-ENV LOG_PATH /home/logs/log.txt
-EOF
-```
-
-```sh
-$ cat >> Dockerfile <<EOF
-
-VOLUME /home/logs
-EOF
-```
-
-```sh
-$ cat >> Dockerfile <<EOF
-
-WORKDIR _install/bin
-EOF
-```
-
-```sh
-$ cat >> Dockerfile <<EOF
-
-ENTRYPOINT ./demo
-EOF
-```
-
-```sh
-$ docker build -t logger .
-```
-
-```sh
-$ docker images
-```
-
-```sh
-$ mkdir logs
-$ docker run -it -v "$(pwd)/logs/:/home/logs/" logger
-text1
-text2
-text3
-<C-D>
-```
-
-```sh
-$ docker inspect logger
-```
-
-```sh
-$ cat logs/log.txt
-```
-
-```sh
-$ gsed -i 's/lab07/lab08/g' README.md
-```
-
-```sh
-$ vim .travis.yml
-/lang<CR>o
-services:
-- docker<ESC>
-jVGdo
-script:
-- docker build -t logger .<ESC>
-:wq
-```
-
-```sh
-$ git add Dockerfile
-$ git add .travis.yml
-$ git commit -m"adding Dockerfile"
-$ git push origin master
-```
-
-```sh
-$ travis login --auto
-$ travis enable
-```
-
-## Report
-
-```sh
-$ popd
-$ export LAB_NUMBER=08
-$ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
-$ mkdir reports/lab${LAB_NUMBER}
-$ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
-$ cd reports/lab${LAB_NUMBER}
-$ edit REPORT.md
-$ gist REPORT.md
-```
 
 ## Links
 
